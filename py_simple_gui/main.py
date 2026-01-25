@@ -12,6 +12,17 @@ tab2_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy dany
                [sg.Button('Filtruj', key='tab2_action')],
                [sg.Text('', key='wynik2', size=(50, 2))]]
 
+tab2e_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy danych, po czym filtruje tylko wybrany typ.")]
+                [sg.Text("Podaj wartość do przefiltrowania:")],
+                [sg.InputText(key='input2e', size=(12, 1))],
+                [sg.Text("Wybierz typ danych do przefiltrowania:")],
+                [sg.Checkbox('Litery', default=False, key='tab2e_ch_string')],
+                [sg.Checkbox('Cyfry', default=False, key='tab2e_ch_int')],
+                [sg.Checkbox('Znaki specjalne', default=False, key='tab2e_ch_special')],
+
+                [sg.Button('Filtruj', key='tab2_action')],
+                [sg.Text('', key='wynik2e', size=(50, 2))]]
+
 # tab2_layout = [
 #     [sg.Frame('Główny Frame', [
 #         [sg.Frame('Podframe 1', [
@@ -28,7 +39,8 @@ tab2_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy dany
 # ]
 
 layout = [[sg.TabGroup([[sg.Tab('Zadanie 1 - liczby parzyste', tab1_layout),
-                         sg.Tab('Zadanie 2 - filtruj elementy liczbowe', tab2_layout)]])],
+                         sg.Tab('Zadanie 2 - filtruj elementy liczbowe', tab2_layout),
+                         sg.Tab('Zadanie 2e - filtruj wybrane elementy', tab2e_layout)]])],
           [sg.Button('Zamknij ten świetny program', key='close')]]
 
 window = sg.Window('Program', layout, no_titlebar=True, grab_anywhere=True)
@@ -66,4 +78,22 @@ while True:
                 window['input2'].update('')
             except ValueError:
                 window['wynik2'].update("Błąd wprowadzenia!")
+
+    if event == 'tab2e_action':
+        if values['input2e'] != '':
+            try:
+                tab2e_input = values['input2e']
+                tab2e_input_list = list(tab2e_input)
+                tab2e_output_list = list()
+                for element in tab2e_input_list:
+                    try:
+                        liczba = int(element)
+                        tab2e_output_list.append(liczba)
+                    except ValueError:
+                        pass
+                tab2e_output = ''.join(str(x) for x in tab2e_output_list)
+                window['wynik2e'].update(f'Liczby podane przez użytkownika to: {tab2e_output}')
+                window['input2e'].update('')
+            except ValueError:
+                window['wynik2e'].update("Błąd wprowadzenia!")
 window.close()
