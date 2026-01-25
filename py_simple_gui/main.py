@@ -2,25 +2,24 @@ import PySimpleGUI as sg
 
 tab1_layout = [[sg.Text("Program wyświetla liczbę parzystych liczb od 0 do podanej przez użytkownika liczby.")],
                [sg.Text("Podaj liczbę:")],
-               [sg.InputText(key='input1', size=(8, 1))],
+               [sg.InputText(key='input1', size=(20, 1))],
                [sg.Button('Oblicz', key='tab1_action')],
                [sg.Text('', key='wynik1', size=(50, 2))]]
 
 tab2_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy danych, po czym filtruje tylko liczby.")],
                [sg.Text("Podaj wartość do przefiltrowania:")],
-               [sg.InputText(key='input2', size=(12, 1))],
+               [sg.InputText(key='input2', size=(20, 1))],
                [sg.Button('Filtruj', key='tab2_action')],
                [sg.Text('', key='wynik2', size=(50, 2))]]
 
-tab2e_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy danych, po czym filtruje tylko wybrany typ.")]
+tab2e_layout = [[sg.Text("Program pozwala użytkownikowi podać różne typy danych, po czym filtruje tylko wybrany typ.")],
                 [sg.Text("Podaj wartość do przefiltrowania:")],
-                [sg.InputText(key='input2e', size=(12, 1))],
+                [sg.InputText(key='input2e', size=(20, 1))],
                 [sg.Text("Wybierz typ danych do przefiltrowania:")],
                 [sg.Checkbox('Litery', default=False, key='tab2e_ch_string')],
                 [sg.Checkbox('Cyfry', default=False, key='tab2e_ch_int')],
                 [sg.Checkbox('Znaki specjalne', default=False, key='tab2e_ch_special')],
-
-                [sg.Button('Filtruj', key='tab2_action')],
+                [sg.Button('Filtruj', key='tab2e_action')],
                 [sg.Text('', key='wynik2e', size=(50, 2))]]
 
 # tab2_layout = [
@@ -85,15 +84,21 @@ while True:
                 tab2e_input = values['input2e']
                 tab2e_input_list = list(tab2e_input)
                 tab2e_output_list = list()
+
                 for element in tab2e_input_list:
-                    try:
-                        liczba = int(element)
-                        tab2e_output_list.append(liczba)
-                    except ValueError:
-                        pass
+                    if values['tab2e_ch_string'] and element.isalpha():
+                        tab2e_output_list.append(element)
+                    if values['tab2e_ch_int']:
+                        try:
+                            tab2e_output_list.append(int(element))
+                        except ValueError:
+                            pass
+                    if values['tab2e_ch_special']:
+                        if not element.isalnum() and not element.isspace():
+                            tab2e_output_list.append(element)
+
                 tab2e_output = ''.join(str(x) for x in tab2e_output_list)
                 window['wynik2e'].update(f'Liczby podane przez użytkownika to: {tab2e_output}')
-                window['input2e'].update('')
             except ValueError:
                 window['wynik2e'].update("Błąd wprowadzenia!")
 window.close()
